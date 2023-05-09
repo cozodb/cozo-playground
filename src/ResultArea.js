@@ -16,7 +16,7 @@ function displayValue(v, colorScheme) {
 
 export function ResultArea({queryResults}) {
     const colorScheme = usePreferredColorScheme();
-    const [_, setViewingValue] = useAtom(viewingValueAtom);
+    const setViewingValue = useAtom(viewingValueAtom)[1];
     const renderCell = (colIdx) => (rowIdx) => <Cell>
         {displayValue(queryResults.rows[rowIdx][colIdx], colorScheme)}
     </Cell>

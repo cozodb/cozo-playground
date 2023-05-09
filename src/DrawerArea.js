@@ -3,6 +3,10 @@ import {Resizable} from "react-resizable";
 import {drawerSizeAtom, selectedBarAtom} from "./state";
 import {SettingsBar} from "./SettingsBar";
 import {ViewingValue} from "./ValueView";
+import {ParametersView} from "./ParametersView";
+import {HistoryView} from "./HistoryView";
+import {ImportBar} from "./ImportBar";
+import {ExportBar} from "./ExportBar";
 
 
 export function DrawerArea() {
@@ -17,6 +21,14 @@ export function DrawerArea() {
         Bar = SettingsBar;
     } else if (selectedBar === 'value-viewer') {
         Bar = ViewingValue;
+    } else if (selectedBar === 'parameters') {
+        Bar = ParametersView;
+    } else if (selectedBar === 'history') {
+        Bar = HistoryView;
+    } else if (selectedBar === 'import') {
+        Bar = ImportBar;
+    } else if (selectedBar === 'export') {
+        Bar = ExportBar;
     }
 
     if (!Bar) {

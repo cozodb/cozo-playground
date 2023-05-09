@@ -10,3 +10,7 @@ export const serverUrlAtom = atomWithStorage('serverUrl', '');
 export const authStringAtom = atomWithStorage('authString', '');
 
 export const viewingValueAtom = atom(null);
+
+export const parametersAtom = atomWithStorage('parameters', '{}');
+
+export const historyAtom = atomWithStorage('history', []);

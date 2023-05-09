@@ -1,7 +1,15 @@
 import {useAtom} from "jotai";
 import {Resizable} from "react-resizable";
-import {Button, Classes, Intent, TextArea} from "@blueprintjs/core";
-import {authStringAtom, drawerSizeAtom, inputSizeAtom, serverUrlAtom} from "./state";
+import {Button, Classes, Intent, Spinner, TextArea} from "@blueprintjs/core";
+import {
+    authStringAtom,
+    drawerSizeAtom,
+    historyAtom,
+    inputSizeAtom,
+    parametersAtom,
+    selectedBarAtom,
+    serverUrlAtom
+} from "./state";
 import {ResultArea} from "./ResultArea";
 import {useMutation} from "react-query";
 import {CozoClient} from "./client";
@@ -11,6 +19,7 @@ import {parse} from "ansicolor";
 export const queryAtom = atomWithStorage('query', '');
 
 export function InputArea() {
+    const [selectedBar] = useAtom(selectedBarAtom);
     const [drawerWidth] = useAtom(drawerSizeAtom);
     const [inputHeight, setInputHeight] = useAtom(inputSizeAtom);
     const handleInputResize = (event, {size}) => {
@@ -19,8 +28,25 @@ export function InputArea() {
     const [serverUrl] = useAtom(serverUrlAtom);
     const [authString] = useAtom(authStringAtom);
     const [query, setQuery] = useAtom(queryAtom);
+    const [params] = useAtom(parametersAtom);
+    const [history, setHistory] = useAtom(historyAtom);
 
-    const sendRequest = useMutation(CozoClient);
+    const sendRequest = useMutation(CozoClient, {
+        onSuccess: () => {
+            let newHistory = [];
+            const timestamp = Date.now();
+            newHistory.push({query, params, timestamp});
+            for (let item of history) {
+                if (item.query !== query) {
+                    newHistory.push(item);
+                }
+            }
+            if (history.length > 1000) {
+                newHistory = newHistory.slice(0, 1000);
+            }
+            setHistory(newHistory);
+        }
+    });
 
     function typeInTextarea(newText, el = document.activeElement) {
         const [start, end] = [el.selectionStart, el.selectionEnd];
@@ -30,7 +56,7 @@ export function InputArea() {
     function handleRequest() {
         const q = query.trim();
         if (q) {
-            sendRequest.mutate({serverUrl, authString, query});
+            sendRequest.mutate({serverUrl, authString, query, params});
         }
     }
 
@@ -49,7 +75,9 @@ export function InputArea() {
 
     let result;
 
-    if (sendRequest.isSuccess) {
+    if (sendRequest.isLoading) {
+        result = <Spinner style={{marginTop: 30}}/>
+    } else if (sendRequest.isSuccess) {
         result = <ResultArea queryResults={sendRequest.data}/>;
     } else if (sendRequest.isError) {
         if (sendRequest.error.display) {
@@ -87,7 +115,7 @@ export function InputArea() {
     return <div style={{
         display: 'flex',
         flexDirection: 'column',
-        width: window.innerWidth - drawerWidth,
+        width: selectedBar ? window.innerWidth - drawerWidth : '100%',
         height: 'calc(100vh - 50px)',
         paddingLeft: 8,
         paddingRight: 8,
@@ -116,7 +144,7 @@ export function InputArea() {
                     style={{marginBottom: 8, flex: 1}}
                 />
                 <div>
-                    <Button text="Submit" intent={Intent.PRIMARY} onClick={handleRequest}/>
+                    <Button text="Submit" intent={Intent.PRIMARY} onClick={handleRequest} disabled={sendRequest.isLoading}/>
                 </div>
             </div>
 
