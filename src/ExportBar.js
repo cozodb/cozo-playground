@@ -1,5 +1,5 @@
 import {Button, Checkbox, H5, Intent, Label, Spinner} from "@blueprintjs/core";
-import {useQuery} from "react-query";
+import {useQuery} from "@tanstack/react-query";
 import {CozoClient, ExportRelations} from "./client";
 import {useAtom} from "jotai";
 import {authStringAtom, serverUrlAtom} from "./state";

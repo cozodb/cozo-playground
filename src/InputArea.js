@@ -11,7 +11,7 @@ import {
     serverUrlAtom
 } from "./state";
 import {ResultArea} from "./ResultArea";
-import {useMutation} from "react-query";
+import {useMutation} from "@tanstack/react-query";
 import {CozoClient} from "./client";
 import {atomWithStorage} from "jotai/utils";
 import {parse} from "ansicolor";
@@ -83,7 +83,13 @@ export function InputArea() {
         if (sendRequest.error.display) {
             const messages = parse(sendRequest.error.display);
 
-            result = <pre id="error-message">
+            result = <pre
+                id="error-message"
+                style={{
+                    whiteSpace: 'pre-wrap',
+                    wordWrap: 'break-word',
+                }}
+            >
                 {messages.spans.map((item, id) => {
                     if (typeof item === 'string') {
                         return <span key={id}>{item}</span>
