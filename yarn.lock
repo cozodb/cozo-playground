@@ -3410,10 +3410,8 @@ cosmiconfig@^7.0.0:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
-cozo-lib-wasm@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.npmmirror.com/cozo-lib-wasm/-/cozo-lib-wasm-0.7.0.tgz#8555ffe64a6bf4c0924fc4423b3c59959d78bd87"
-  integrity sha512-85IfMVIH3kRZzTDJXKgwSHjm08RJAtz2lRqjozzYVJ24py+2r2015q8qUcUGWxU96HDhP6VhYUYDaL/EyCYaQQ==
+"cozo-lib-wasm@file:../cozo/cozo-lib-wasm/pkg":
+  version "0.7.1"
 
 cross-spawn@^7.0.2, cross-spawn@^7.0.3:
   version "7.0.3"
