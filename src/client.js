@@ -17,7 +17,7 @@ async function WASMClient({query, params}) {
         await init();
         db = CozoDb.new();
     }
-    const res_str = db.run(query, JSON.stringify(dJSON.parse(params)));
+    const res_str = db.run(query, JSON.stringify(dJSON.parse(params)), false);
     console.log(res_str);
     const res = JSON.parse(res_str);
     if (!res.ok) {
@@ -37,7 +37,8 @@ async function HTTPClient({serverUrl, authString, query, params}) {
         },
         body: JSON.stringify({
             script: query,
-            params: dJSON.parse(params) || {}
+            params: dJSON.parse(params) || {},
+            immutable: false
         })
     });
     if (resp.ok) {
